@@ -1,0 +1,128 @@
+export const codeWorldZones = [
+  { id:'comms', name:'Centro de comunicaciones', short:'Comunicaciones', x:-18, z:-15, accent:'#47d7ff', description:'Devuelve la voz al campus y aprende a enviar tus primeras instrucciones.' },
+  { id:'energy', name:'Laboratorio de energía', short:'Energía', x:0, z:-19, accent:'#ffb43b', description:'Variables y decisiones reactivan generadores, compuertas y sistemas de seguridad.' },
+  { id:'garden', name:'Jardín digital', short:'Jardín', x:18, z:-14, accent:'#62e6a6', description:'Automatiza plantas y sensores para descubrir el poder de los bucles.' },
+  { id:'hangar', name:'Hangar de drones', short:'Drones', x:21, z:7, accent:'#b58cff', description:'Crea funciones para despegar, patrullar y escanear el campus.' },
+  { id:'data', name:'Ciudad de datos', short:'Datos', x:10, z:19, accent:'#ff6fae', description:'Usa listas, diccionarios y condiciones para iluminar información útil.' },
+  { id:'logic', name:'Torre lógica', short:'Lógica', x:-10, z:20, accent:'#7aa8ff', description:'Combina repeticiones y funciones para sincronizar sistemas complejos.' },
+  { id:'core', name:'Núcleo central', short:'Núcleo', x:0, z:0, accent:'#ffffff', description:'El reto final: conecta todo lo aprendido y devuelve la vida a AeroLab.' },
+]
+
+export const codeWorldMissions = [
+  {
+    id:'cw-01', zone:'comms', order:1, title:'La voz del centro', concept:'print() y llamadas', difficulty:'Inicio',
+    summary:'La red de comunicaciones está en silencio. Envía un mensaje de arranque y activa la antena principal.',
+    objective:'Muestra un mensaje con print() y llama activar_comunicaciones().',
+    starterCode:'print("Iniciando enlace Aerolab...")\n\nactivar_comunicaciones()',
+    hint:'Puedes cambiar el mensaje. Lo importante es usar print() y activar_comunicaciones().',
+    validate:{ calls:['print','activar_comunicaciones'], events:{comms:1} },
+    reward:'Fragmento: print()',
+    terminal:[-15.5,0,-12.5],
+  },
+  {
+    id:'cw-02', zone:'energy', order:2, title:'Primer pulso', concept:'variables', difficulty:'Inicio',
+    summary:'El generador responde, pero necesita recibir un nivel de energía desde una variable.',
+    objective:'Guarda un valor numérico en una variable y úsalo al llamar encender_generador().',
+    starterCode:'energia = 8\nencender_generador(energia)',
+    hint:'El nombre de la variable puede ser distinto. El generador acepta un número.',
+    validate:{ constructs:['Assign'], calls:['encender_generador'], events:{generator:1} },
+    reward:'Fragmento: variable', terminal:[0,0,-15.5],
+  },
+  {
+    id:'cw-03', zone:'energy', order:3, title:'Puerta de seguridad', concept:'if', difficulty:'Básico',
+    summary:'La compuerta solo debe abrirse cuando haya suficiente energía. Haz que el sistema tome la decisión.',
+    objective:'Usa una condición if y abre la puerta cuando la energía sea suficiente.',
+    starterCode:'energia = 8\n\nif energia >= 5:\n    abrir_puerta("laboratorio")',
+    hint:'Prueba otros valores de energia. La misión debe contener una decisión con if.',
+    validate:{ constructs:['If'], calls:['abrir_puerta'], events:{door:1} },
+    reward:'Fragmento: if', terminal:[4,0,-16],
+  },
+  {
+    id:'cw-04', zone:'garden', order:4, title:'Jardín dormido', concept:'for y range()', difficulty:'Básico',
+    summary:'Cinco módulos de cultivo esperan una señal. En lugar de repetir código, automatiza la tarea.',
+    objective:'Usa for para activar al menos cinco plantas.',
+    starterCode:'for planta in range(5):\n    activar_planta(planta)',
+    hint:'range(5) produce cinco posiciones: 0, 1, 2, 3 y 4.',
+    validate:{ constructs:['For'], calls:['range','activar_planta'], events:{plant:5} },
+    reward:'Fragmento: for', terminal:[15,0,-12],
+  },
+  {
+    id:'cw-05', zone:'garden', order:5, title:'Cultivo selectivo', concept:'listas + if', difficulty:'Básico',
+    summary:'No todas las plantas tienen suficiente energía. Activa solamente las que tengan 5 puntos o más.',
+    objective:'Recorre una lista con for, usa if y activa solo las posiciones con energía suficiente.',
+    starterCode:'energias = [3, 8, 2, 9, 6]\n\nfor indice, energia in enumerate(energias):\n    if energia >= 5:\n        activar_planta(indice)',
+    hint:'No importa qué valores elijas, pero tu solución debe combinar una lista, for e if.',
+    validate:{ constructs:['List','For','If'], calls:['activar_planta'], events:{plant:3} },
+    reward:'Fragmento: lista', terminal:[20,0,-10],
+  },
+  {
+    id:'cw-06', zone:'hangar', order:6, title:'Despegue', concept:'funciones', difficulty:'Intermedio',
+    summary:'El primer dron está listo. Crea una función que agrupe la secuencia de despegue y ejecútala.',
+    objective:'Define una función, enciende los motores y sube el dron.',
+    starterCode:'def despegar():\n    encender_motores()\n    subir(3)\n\ndespegar()',
+    hint:'Una función se define con def y no hace nada hasta que la llamas.',
+    validate:{ constructs:['FunctionDef'], calls:['encender_motores','subir'], events:{motors:1, rise:1} },
+    reward:'Fragmento: def', terminal:[18,0,5],
+  },
+  {
+    id:'cw-07', zone:'hangar', order:7, title:'Patrulla automática', concept:'funciones + bucles', difficulty:'Intermedio',
+    summary:'El dron debe inspeccionar tres sectores del hangar sin que escribas la misma orden tres veces.',
+    objective:'Usa un bucle para escanear y patrullar al menos tres veces.',
+    starterCode:'for sector in range(3):\n    escanear()\n    patrullar(sector)\n\nregresar()',
+    hint:'Puedes usar for o una función propia. Debe haber por lo menos tres escaneos.',
+    validate:{ constructs:['For'], calls:['escanear','patrullar','regresar'], events:{scan:3, patrol:3, return:1} },
+    reward:'Fragmento: automatización', terminal:[22,0,11],
+  },
+  {
+    id:'cw-08', zone:'data', order:8, title:'Luces de mérito', concept:'diccionarios', difficulty:'Intermedio',
+    summary:'La ciudad de datos contiene registros de alumnos. Ilumina únicamente a quienes superen 60 puntos.',
+    objective:'Recorre datos y usa una condición para iluminar al menos dos nombres con puntuación alta.',
+    starterCode:'alumnos = [\n    {"nombre": "Ana", "puntos": 80},\n    {"nombre": "Luis", "puntos": 45},\n    {"nombre": "Mia", "puntos": 95}\n]\n\nfor alumno in alumnos:\n    if alumno["puntos"] > 60:\n        iluminar(alumno["nombre"])',
+    hint:'La condición puede ser distinta mientras seleccione correctamente los datos que quieres destacar.',
+    validate:{ constructs:['List','Dict','For','If'], calls:['iluminar'], events:{light:2} },
+    reward:'Fragmento: diccionario', terminal:[8,0,16],
+  },
+  {
+    id:'cw-09', zone:'data', order:9, title:'Filtro inteligente', concept:'funciones con datos', difficulty:'Intermedio',
+    summary:'Convierte el filtro de datos en una herramienta reutilizable mediante una función.',
+    objective:'Crea una función con una condición y úsala para decidir qué registro iluminar.',
+    starterCode:'def destacar(nombre, puntos):\n    if puntos >= 70:\n        iluminar(nombre)\n\ndestacar("Noa", 88)\ndestacar("Leo", 52)\ndestacar("Sara", 91)',
+    hint:'La solución es válida aunque cambies nombres, valores o el umbral.',
+    validate:{ constructs:['FunctionDef','If'], calls:['iluminar'], events:{light:2} },
+    reward:'Fragmento: reutilización', terminal:[14,0,20],
+  },
+  {
+    id:'cw-10', zone:'logic', order:10, title:'Torre en sincronía', concept:'while', difficulty:'Avanzado',
+    summary:'Tres secciones de la torre deben sincronizarse una por una antes de conectar el núcleo.',
+    objective:'Usa while para activar al menos tres secciones de la torre.',
+    starterCode:'seccion = 0\n\nwhile seccion < 3:\n    activar_torre(seccion)\n    seccion += 1',
+    hint:'El valor de control debe cambiar dentro del while para evitar un bucle infinito.',
+    validate:{ constructs:['While'], calls:['activar_torre'], events:{tower:3} },
+    reward:'Fragmento: while', terminal:[-8,0,17],
+  },
+  {
+    id:'cw-11', zone:'logic', order:11, title:'Red de sistemas', concept:'listas + funciones', difficulty:'Avanzado',
+    summary:'Comunicaciones, energía, jardín, drones, datos y torre necesitan quedar registrados en una misma red.',
+    objective:'Recorre una colección y sincroniza al menos seis sistemas.',
+    starterCode:'sistemas = ["comunicaciones", "energia", "jardin", "drones", "datos", "torre"]\n\nfor sistema in sistemas:\n    sincronizar(sistema)',
+    hint:'Puedes usar una lista, tupla u otra colección. Lo importante es automatizar la sincronización.',
+    validate:{ constructs:['For'], calls:['sincronizar'], events:{sync:6} },
+    reward:'Fragmento: sistemas', terminal:[-14,0,20],
+  },
+  {
+    id:'cw-12', zone:'core', order:12, title:'Núcleo de AeroLab', concept:'proyecto integrador', difficulty:'Jefe final',
+    summary:'Todo el campus está preparado. Construye una función que coordine varios sistemas y active el núcleo central.',
+    objective:'Define una función propia, sincroniza sistemas, usa una decisión o un bucle y termina con activar_nucleo().',
+    starterCode:'sistemas = ["comunicaciones", "energia", "jardin", "drones", "datos", "torre"]\n\ndef restaurar_centro(sistemas):\n    for sistema in sistemas:\n        sincronizar(sistema)\n\n    if len(sistemas) >= 6:\n        activar_nucleo()\n\nrestaurar_centro(sistemas)',
+    hint:'No existe una única solución. AeroLab comprobará que combines estructura, automatización y activación del núcleo.',
+    validate:{ constructs:['FunctionDef','For','If'], calls:['sincronizar','activar_nucleo'], events:{sync:6, core:1} },
+    reward:'SISTEMA RESTAURADO', terminal:[2.8,0,2.5],
+  },
+]
+
+export function getCodeWorldMission(id){ return codeWorldMissions.find((item)=>item.id===id) ?? null }
+export function getCodeWorldZone(id){ return codeWorldZones.find((item)=>item.id===id) ?? null }
+export function isCodeWorldUnlocked(id, completed=[]){
+  const index=codeWorldMissions.findIndex((item)=>item.id===id)
+  return index <= 0 || codeWorldMissions.slice(0,index).every((item)=>completed.includes(item.id))
+}
